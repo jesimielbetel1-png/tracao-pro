@@ -226,7 +226,7 @@ textarea{resize:vertical;min-height:62px;}
       <text x="51" y="38" font-family="Arial,sans-serif" font-size="7" fill="#C9973A" letter-spacing="6" font-weight="700">PRO</text>
     </svg>
     <span>Sistema de Mentoria</span>
-    <span id="sync-indicator" style="font-size:.62rem;color:rgba(255,255,255,.4);margin-left:6px;">☁️ Conectando...</span>
+    <span id="sync-indicator" style="font-size:.62rem;color:rgba(255,255,255,.4);margin-left:6px;"></span>
   </div>
   <div class="tbr">
     <span id="active-badge" class="cbg" style="display:none;" onclick="goPage('clientes')"></span>
@@ -568,7 +568,7 @@ async function _flushToCloud(){
 // Carrega TODOS os dados da nuvem no início
 async function _loadFromCloud(){
   const indicator = document.getElementById('sync-indicator');
-  if(indicator) indicator.textContent = '☁️';
+  
   try{
     const controller = new AbortController();
     const timeout = setTimeout(()=>controller.abort(), 3000); // 5s timeout
@@ -581,14 +581,14 @@ async function _loadFromCloud(){
         localStorage.setItem('tp_'+k, JSON.stringify(v));
       });
     }
-    if(indicator) indicator.textContent = '✅ Nuvem';
+    if(indicator){indicator.textContent='✅';setTimeout(()=>{if(indicator)indicator.textContent='';},3000);}
   }catch(e){
     // Fallback para localStorage se offline ou timeout
     console.warn('Nuvem indisponível, usando dados locais');
     Object.keys(localStorage).filter(k=>k.startsWith('tp_')).forEach(k=>{
       try{ _cache[k.replace('tp_','')] = JSON.parse(localStorage.getItem(k)); }catch{}
     });
-    if(indicator) indicator.textContent = '📴 Offline (local)';
+    
   }
 }
 
