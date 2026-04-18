@@ -568,27 +568,27 @@ async function _flushToCloud(){
 // Carrega TODOS os dados da nuvem no início
 async function _loadFromCloud(){
   const indicator = document.getElementById('sync-indicator');
-  
   try{
     const controller = new AbortController();
-    const timeout = setTimeout(()=>controller.abort(), 3000); // 5s timeout
-    const res = await fetch(GAS_URL + '?action=getAll', {signal: controller.signal});
+    const timeout = setTimeout(()=>controller.abort(), 3000);
+    const res = await fetch(GAS_URL + '?action=getAll', {
+      signal: controller.signal,
+      redirect: 'follow'
+    });
     clearTimeout(timeout);
-    const json = await res.json();
+    const text = await res.text();
+    const json = JSON.parse(text);
     if(json && json.data){
       Object.entries(json.data).forEach(([k,v])=>{
         _cache[k] = v;
         localStorage.setItem('tp_'+k, JSON.stringify(v));
       });
+      if(indicator){indicator.textContent='✅';setTimeout(()=>{if(indicator)indicator.textContent='';},3000);}
     }
-    if(indicator){indicator.textContent='✅';setTimeout(()=>{if(indicator)indicator.textContent='';},3000);}
   }catch(e){
-    // Fallback para localStorage se offline ou timeout
-    console.warn('Nuvem indisponível, usando dados locais');
     Object.keys(localStorage).filter(k=>k.startsWith('tp_')).forEach(k=>{
       try{ _cache[k.replace('tp_','')] = JSON.parse(localStorage.getItem(k)); }catch{}
     });
-    
   }
 }
 
