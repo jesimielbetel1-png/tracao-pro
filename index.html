@@ -568,10 +568,10 @@ async function _flushToCloud(){
 // Carrega TODOS os dados da nuvem no início
 async function _loadFromCloud(){
   const indicator = document.getElementById('sync-indicator');
-  if(indicator) indicator.textContent = '☁️ Sincronizando...';
+  if(indicator) indicator.textContent = '☁️';
   try{
     const controller = new AbortController();
-    const timeout = setTimeout(()=>controller.abort(), 5000); // 5s timeout
+    const timeout = setTimeout(()=>controller.abort(), 3000); // 5s timeout
     const res = await fetch(GAS_URL + '?action=getAll', {signal: controller.signal});
     clearTimeout(timeout);
     const json = await res.json();
