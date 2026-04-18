@@ -1099,16 +1099,6 @@ function checkiOSInstall(){
 function showMobileMenu(){ document.getElementById('mobile-menu').style.display='block'; }
 function hideMobileMenu(){ document.getElementById('mobile-menu').style.display='none'; }
 
-// Atualiza nav mobile quando muda de página
-const _origGoPage = goPage;
-function goPage(n){
-  _origGoPage(n);
-  // Atualiza mobile nav
-  document.querySelectorAll('.mn-item').forEach(b=>{
-    b.classList.toggle('on', b.dataset.mp === n);
-  });
-  hideMobileMenu();
-}
 
 // ══════════════════════════════════════
 // APP INIT — verifica login antes de tudo
